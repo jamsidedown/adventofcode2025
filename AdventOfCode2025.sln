@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "AdventOfCode2025.Test", "AdventOfCode2025.Test\AdventOfCode2025.Test.fsproj", "{37698C66-BFD2-4CED-BE49-B456F42AC14A}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "AdventOfCode2025", "AdventOfCode2025\AdventOfCode2025.fsproj", "{9B0C6F09-CD86-4ADD-8577-32CE77F7D1DA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{01715766-D2A2-4FEC-90FF-1A169E4EBC7C}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{37698C66-BFD2-4CED-BE49-B456F42AC14A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37698C66-BFD2-4CED-BE49-B456F42AC14A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37698C66-BFD2-4CED-BE49-B456F42AC14A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37698C66-BFD2-4CED-BE49-B456F42AC14A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B0C6F09-CD86-4ADD-8577-32CE77F7D1DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B0C6F09-CD86-4ADD-8577-32CE77F7D1DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B0C6F09-CD86-4ADD-8577-32CE77F7D1DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B0C6F09-CD86-4ADD-8577-32CE77F7D1DA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

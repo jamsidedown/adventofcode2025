@@ -1,0 +1,32 @@
+﻿let solutions = Map.ofList [
+    (1, AdventOfCode2025.Solutions.Day01.Run)
+]
+
+[<EntryPoint>]
+let main (args: string array) =
+    let chosenDays =
+        match args with
+        | [||] ->
+            solutions
+            |> Seq.map _.Key
+            |> Seq.sortDescending
+            |> Seq.head
+            |> fun h -> [h]
+        | [| "--all"  |] ->
+            solutions
+            |> Seq.map _.Key
+            |> List.ofSeq
+        | _ ->
+            args
+            |> Array.map int
+            |> List.ofArray
+    
+    for day in List.sort chosenDays do
+        match solutions.TryFind day with
+        | Some func ->
+            printfn $"Day %i{day}"
+            func()
+        | None ->
+            printfn $"Can't find day %i{day}"
+    
+    0
