@@ -1,5 +1,5 @@
 ﻿let solutions = Map.ofList [
-    (1, AdventOfCode2025.Solutions.Day01.Run)
+    (1, AdventOfCode2025.Solutions.Day01.run)
 ]
 
 [<EntryPoint>]

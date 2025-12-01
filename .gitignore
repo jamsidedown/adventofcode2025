@@ -2,3 +2,5 @@ input/
 .idea/
 bin/
 obj/
+.DS_Store
+*.DotSettings.user

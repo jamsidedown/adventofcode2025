@@ -13,6 +13,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{01715766-D
 		.gitignore = .gitignore
 	EndProjectSection
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "AdventOfCode2025.Solutions", "AdventOfCode2025.Solutions\AdventOfCode2025.Solutions.fsproj", "{0BED9B25-AE7F-4116-A866-6A3FC5D5E277}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "AdventOfCode2025.Core", "AdventOfCode2025.Core\AdventOfCode2025.Core.fsproj", "{6EA7C304-5345-4761-94A4-35923D05E97B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +34,13 @@ Global
 		{9B0C6F09-CD86-4ADD-8577-32CE77F7D1DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B0C6F09-CD86-4ADD-8577-32CE77F7D1DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9B0C6F09-CD86-4ADD-8577-32CE77F7D1DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BED9B25-AE7F-4116-A866-6A3FC5D5E277}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BED9B25-AE7F-4116-A866-6A3FC5D5E277}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BED9B25-AE7F-4116-A866-6A3FC5D5E277}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BED9B25-AE7F-4116-A866-6A3FC5D5E277}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EA7C304-5345-4761-94A4-35923D05E97B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EA7C304-5345-4761-94A4-35923D05E97B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EA7C304-5345-4761-94A4-35923D05E97B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EA7C304-5345-4761-94A4-35923D05E97B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

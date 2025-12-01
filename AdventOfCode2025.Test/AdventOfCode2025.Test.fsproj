@@ -6,7 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Include="Tests.fs"/>
+        <Compile Include="Day01Tests.fs" />
     </ItemGroup>
 
     <ItemGroup>
@@ -17,7 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\AdventOfCode2025\AdventOfCode2025.fsproj" />
+      <ProjectReference Include="..\AdventOfCode2025.Solutions\AdventOfCode2025.Solutions.fsproj" />
     </ItemGroup>
 
 </Project>
