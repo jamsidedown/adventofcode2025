@@ -3,17 +3,14 @@ module AdventOfCode2025.Solutions.Day01
 open System.IO
 open AdventOfCode2025.Core.FileHelpers
 
-type Turn =
-    | Left of int
-    | Right of int
+type Turn = Left of int | Right of int
 
 let read (): string list =
     getFilePath 1
     |> File.ReadAllLines
     |> List.ofArray
     
-let intOfChars (chars: char list): int =
-    System.String(Array.ofList chars) |> int
+let intOfChars: char list -> int = Array.ofList >> System.String >> int
 
 let parse (lines: string list): Turn list =
     lines
@@ -25,19 +22,16 @@ let parse (lines: string list): Turn list =
         | _ -> None)
     |> List.choose id
     
-let modulo (b: int) (x: int): int =
-    let rec loop (y: int): int =
-        if y < 0 then loop (y + b) else y
-    loop (x % b)
+let (%%) (left: int) (right: int): int = ((left % right) + right) % right
     
 let rec partOne (input: Turn list): int =
     let rec loop (acc: int) (remaining: Turn list): int =
         match remaining with
         | Left n :: tail ->
-            let next = acc - n |> modulo 100
+            let next = (acc - n) %% 100
             (if next = 0 then 1 else 0) + loop next tail
         | Right n :: tail ->
-            let next = acc + n |> modulo 100
+            let next = (acc + n) %% 100
             (if next = 0 then 1 else 0) + loop next tail
         | [] -> 0
     loop 50 input
@@ -47,14 +41,14 @@ let countZeroes (m: int) (start: int) (turn: Turn): int =
         match current with
         | Left 0 | Right 0 -> 0
         | Left n ->
-            let next = modulo m (acc - 1)
+            let next = (acc - 1) %% m
             (if next = 0 then 1 else 0) + loop next (Left (n - 1))
         | Right n ->
-            let next = modulo m (acc + 1)
+            let next = (acc + 1) %% m
             (if next = 0 then 1 else 0) + loop next (Right (n - 1))
     match turn with
-    | Right n -> (n / m) + loop start (Right (modulo m n))
-    | Left n -> (n / m) + loop start (Left (modulo m n))
+    | Right n -> (n / m) + loop start (Right (n %% m))
+    | Left n -> (n / m) + loop start (Left (n %% m))
     
 let rec partTwo (input: Turn list): int =
     let count = countZeroes 100
@@ -64,8 +58,8 @@ let rec partTwo (input: Turn list): int =
         | head :: tail ->
             let next =
                 match head with
-                | Left n -> modulo 100 (acc - n)
-                | Right n -> modulo 100 (acc + n)
+                | Left n -> (acc - n) %% 100
+                | Right n -> (acc + n) %% 100
             (count acc head) + loop next tail
     loop 50 input
 
