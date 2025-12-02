@@ -1,6 +1,5 @@
 ﻿module Day01Tests
 
-open System
 open Xunit
 open AdventOfCode2025.Solutions.Day01
 
