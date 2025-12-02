@@ -19,35 +19,53 @@ let parse (input: string): Range list =
         | _ -> None)
     |> List.choose id
     
-let isRepeated (n: int64): bool =
-    let s = $"%i{n}"
-    if s.Length % 2 <> 0 then false else
-    let half = s.Length / 2
-    let first = s[..(half - 1)]
-    let second = s[half..]
-    first = second
-    
-let getInitial (start: int64): int64 =
+let getInitial (start: int64) (parts: int): int64 =
     let s = $"%i{start}"
-    let half = s.Length / 2
-    if half = 0 then start else int64 s[..(half - 1)]
+    let sub = s.Length / parts
+    if sub = 0 then 1 else int64 s[..(sub - 1)]
     
-let findRepeats (start: int64) (stop: int64): int64 list =
+let findDoubles (start: int64) (stop: int64): int64 list =
     let rec loop (current: int64): int64 list =
         let n = $"%i{current}%i{current}" |> int64
         if n < start then loop (current + 1L) else
         match n <= stop with
         | true -> n :: loop (current + 1L)
         | false -> []
-    let initial = getInitial start
+    let initial = getInitial start 2
     loop initial
     
 let partOne (ranges: Range list): int64 =
     ranges
-    |> List.map (fun range -> findRepeats range.start range.stop |> List.sum)
+    |> List.map (fun range -> findDoubles range.start range.stop |> List.sum)
+    |> List.sum
+
+let findAllRepeats (start: int64) (stop: int64): int64 Set =
+    let stopLength = string stop |> _.Length
+    let rec loop (current: int64) (repeats: int): int64 list =
+        let n =
+            string current
+            |> Array.replicate repeats
+            |> String.concat ""
+            |> int64
+        if n < start then loop (current + 1L) repeats else
+        match n <= stop with
+        | true -> n :: loop (current + 1L) repeats
+        | false -> []
+    let rec loopRepeats (parts: int): int64 Set =
+        if parts > stopLength then Set.empty
+        else
+            let initial = getInitial start parts
+            loop initial parts
+            |> Set
+            |> Set.union (loopRepeats (parts + 1))
+    loopRepeats 2
+
+let partTwo (ranges: Range list): int64 =
+    ranges
+    |> List.map (fun range -> findAllRepeats range.start range.stop |> Seq.sum)
     |> List.sum
 
 let run () =
     let input = read() |> parse
     printfn $"Part 1: %i{partOne(input)}"
-    printfn "Part 2:"
+    printfn $"Part 2: %i{partTwo(input)}"
