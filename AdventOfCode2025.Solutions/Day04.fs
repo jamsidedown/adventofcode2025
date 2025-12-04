@@ -4,59 +4,54 @@ open System.IO
 open AdventOfCode2025.Core.FileHelpers
 open AdventOfCode2025.Core.XyPair
 
-type Cell = Paper | Empty
-type Grid = Map<XyPair, Cell>
+type Paper = Set<XyPair>
 
 let read () =
     getFilePath 4
     |> File.ReadAllLines
     |> List.ofArray
     
-let parse (lines: string list): Grid =
+let parse (lines: string list): Paper =
     lines
     |> List.mapi (fun y line ->
         List.ofSeq line
         |> List.mapi (fun x cell ->
             match cell with
-            | '@' -> Some ({ x = x; y = y }, Paper)
+            | '@' -> Some { x = x; y = y }
             | _ -> None))
     |> List.collect id
     |> List.choose id
-    |> Map.ofList
+    |> Set.ofList
    
-let neighbours (map: Grid) (coord: XyPair): XyPair list =
+let neighbours (paper: Paper) (coord: XyPair): Paper =
     [ -1..1 ]
     |> List.collect (fun y ->
         [ -1..1 ]
         |> List.map (fun x -> XyPair.add coord { x = x; y = y }))
     |> List.filter (fun xy -> xy <> coord )
-    |> List.filter (fun xy -> Map.containsKey xy map)
+    |> List.filter (fun xy -> Set.contains xy paper)
+    |> Set.ofList
 
-let countAdjacent (map: Grid) (coord: XyPair): int =
-    neighbours map coord
-    |> List.map (fun c -> Map.containsKey c map)
-    |> List.length
+let canLift (paper: Paper) (coord: XyPair): bool =
+    let count = neighbours paper coord |> Set.count
+    count < 4
     
-let forkliftable (map: Grid): XyPair list =
-    Map.keys map
-    |> Seq.filter (fun coord -> countAdjacent map coord < 4)
-    |> List.ofSeq
+let forkliftable (paper: Paper) (check: Paper): Paper =
+    Set.filter (canLift paper) check
     
-let partOne (map: Grid): int =
-    forkliftable map
-    |> List.length
+let partOne (paper: Paper): int =
+    forkliftable paper paper |> Set.count
 
-let partTwo (map: Grid): int =
-    let rec remove (acc: Grid) (coords: XyPair list): Grid =
-        match coords with
-        | head :: tail -> remove (Map.remove head acc) tail
-        | [] -> acc
-    let rec loop (current: Grid): Grid =
-        match forkliftable current with
-        | [] -> current
-        | ls -> ls |> remove current |> loop
-    let final = loop map
-    Map.count map - Map.count final
+let partTwo (paper: Paper): int =
+    let rec loop (acc: Paper) (check: Paper): Paper =
+        let liftable = forkliftable acc check
+        if Set.isEmpty liftable then acc else
+        let accNext = liftable |> Set.difference acc
+        let checkNext = liftable |> Seq.map (neighbours accNext) |> Set.unionMany
+        loop accNext checkNext
+        
+    let final = loop paper paper
+    Set.count paper - Set.count final
 
 let run () =
     let input = read() |> parse
