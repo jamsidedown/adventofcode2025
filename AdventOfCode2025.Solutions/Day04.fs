@@ -37,12 +37,28 @@ let countAdjacent (map: Grid) (coord: XyPair): int =
     |> List.map (fun c -> Map.containsKey c map)
     |> List.length
     
-let partOne (map: Grid): int =
+let forkliftable (map: Grid): XyPair list =
     Map.keys map
-    |> Seq.map (countAdjacent map)
-    |> Seq.filter (fun count -> count < 4)
-    |> Seq.length
+    |> Seq.filter (fun coord -> countAdjacent map coord < 4)
+    |> List.ofSeq
+    
+let partOne (map: Grid): int =
+    forkliftable map
+    |> List.length
+
+let partTwo (map: Grid): int =
+    let rec remove (acc: Grid) (coords: XyPair list): Grid =
+        match coords with
+        | head :: tail -> remove (Map.remove head acc) tail
+        | [] -> acc
+    let rec loop (current: Grid): Grid =
+        match forkliftable current with
+        | [] -> current
+        | ls -> ls |> remove current |> loop
+    let final = loop map
+    Map.count map - Map.count final
 
 let run () =
     let input = read() |> parse
     printfn $"Part 1: {partOne input}"
+    printfn $"Part 2: {partTwo input}"
