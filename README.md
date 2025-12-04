@@ -57,3 +57,34 @@ Part 1: 1234
 Part 2: 5678
 ...
 ```
+
+### To benchmark
+
+I've been using [hyperfine](https://github.com/sharkdp/hyperfine) to benchmark my solutions
+
+```sh
+# change into exe directory
+$ cd AdventOfCode2025
+
+# publish as release
+$ dotnet publish -c Release
+Restore complete (0.5s)
+  AdventOfCode2025.Core net10.0 succeeded (0.1s) → ~/Documents/code/aoc/adventofcode2025/AdventOfCode2025.Core/bin/Release/net10.0/AdventOfCode2025.Core.dll
+  AdventOfCode2025.Solutions net10.0 succeeded (0.2s) → ~/Documents/code/aoc/adventofcode2025/AdventOfCode2025.Solutions/bin/Release/net10.0/AdventOfCode2025.Solutions.dll
+  AdventOfCode2025 net10.0 linux-x64 succeeded (0.5s) → bin/Release/net10.0/linux-x64/publish/
+
+Build succeeded in 1.7s
+
+# run release version (assuming linux x64)
+$ ./bin/Release/net10.0/linux-x64/publish/AdventOfCode2025 --all
+
+# benchmark specific day using hyperfine
+$ hyperfine --warmup 3 './bin/Release/net10.0/linux-x64/publish/AdventOfCode2025 1'
+Benchmark 1: ./bin/Release/net10.0/linux-x64/publish/AdventOfCode2025 1
+  Time (mean ± σ):      21.5 ms ±   0.3 ms    [User: 17.9 ms, System: 3.8 ms]
+  Range (min … max):    20.9 ms …  22.8 ms    131 runs
+  
+# benchmark all days using hyperfine
+$ hyperfine --warmup 3 './bin/Release/net10.0/linux-x64/publish/AdventOfCode2025 --all'
+...
+```
