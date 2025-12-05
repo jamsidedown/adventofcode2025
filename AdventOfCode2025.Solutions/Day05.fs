@@ -36,9 +36,16 @@ let partOne (ranges: Range list) (ids: int64 list): int =
     ids
     |> List.filter (isFresh ranges)
     |> List.length
+    
+let partTwo (ranges: Range list): int64 =
+    ranges
+    |> Range.reduce
+    |> List.map Range.length
+    |> List.sum
 
 let run () =
     let (rangeInput, idInput) = read()
     let ranges = parseRanges rangeInput
     let ids = parseIds idInput
     printfn $"Part 1: %i{partOne ranges ids}"
+    printfn $"Part 2: %i{partTwo ranges}"
