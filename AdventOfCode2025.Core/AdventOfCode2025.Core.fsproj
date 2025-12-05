@@ -8,6 +8,7 @@
     <ItemGroup>
         <Compile Include="FileHelpers.fs" />
         <Compile Include="XyPair.fs" />
+        <Compile Include="Range.fs" />
     </ItemGroup>
 
 </Project>

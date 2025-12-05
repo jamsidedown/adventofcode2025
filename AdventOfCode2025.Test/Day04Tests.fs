@@ -1,7 +1,6 @@
 module Day04Tests
 
 open Xunit
-open AdventOfCode2025.Core.XyPair
 open AdventOfCode2025.Solutions.Day04
 
 let exampleInput = [

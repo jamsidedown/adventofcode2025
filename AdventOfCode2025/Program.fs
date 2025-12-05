@@ -3,6 +3,7 @@
     (2, AdventOfCode2025.Solutions.Day02.run)
     (3, AdventOfCode2025.Solutions.Day03.run)
     (4, AdventOfCode2025.Solutions.Day04.run)
+    (5, AdventOfCode2025.Solutions.Day05.run)
 ]
 
 [<EntryPoint>]
