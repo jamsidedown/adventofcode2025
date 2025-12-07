@@ -18,7 +18,7 @@ let rec parseProblem (acc: int64 list) (remaining: string list): Problem option 
     | head :: tail -> parseProblem (int64 head :: acc) tail
     | _ -> None
     
-let parse(lines: string list): Problem list =
+let parseOne (lines: string list): Problem list =
     lines
     |> List.collect (fun line ->
         line.Split(' ', StringSplitOptions.RemoveEmptyEntries)
@@ -30,7 +30,7 @@ let parse(lines: string list): Problem list =
     |> List.map (parseProblem [])
     |> List.choose id
 
-let partOne (problems: Problem list): int64 =
+let resolveProblems (problems: Problem list): int64 =
     let rec loop (acc: int64) (remaining: Problem list): int64 =
         match remaining with
         | Add lst :: tail -> loop (acc + List.sum lst) tail
@@ -40,6 +40,42 @@ let partOne (problems: Problem list): int64 =
         | [] -> acc
     loop 0L problems
 
+let getNumbers (numbers: int64 list) (chars: char list): int64 list =
+    match chars with
+    | [] -> numbers
+    | ls -> (List.rev ls |> Array.ofList |> String |> int64) :: numbers
+
+let parseTwo (lines: string list) : Problem list =
+    let rec loop (numbers: int64 list) (acc: char list) (remainingLines: char list list) (remainingChars: char list): Problem list =
+        match remainingChars with
+        | ['+'] ->
+            let add = Add (getNumbers numbers acc |> List.rev)
+            match remainingLines with
+            | head :: tail -> add :: loop [] [] tail head
+            | [] -> [ add ]
+        | ['*'] ->
+            let multiply = Multiply (getNumbers numbers acc |> List.rev)
+            match remainingLines with
+            | head :: tail -> multiply :: loop [] [] tail head
+            | [] -> [ multiply ]
+        | ' ' :: tail -> loop numbers acc remainingLines tail
+        | c :: tail -> loop numbers (c :: acc) remainingLines tail
+        | [] ->
+            match remainingLines with
+            | head :: tail -> loop (getNumbers numbers acc) [] tail head
+            | [] -> []
+    
+    let allCharacters =
+        Array.ofList lines
+        |> Array.map Array.ofSeq
+        |> Array.transpose
+        |> Array.rev
+        |> Array.map List.ofArray
+        |> List.ofArray
+    loop [] [] allCharacters []
+
 let run () =
-    let input = read() |> parse
-    printfn $"Part 1: %i{partOne input}"
+    let inputOne = read() |> parseOne
+    printfn $"Part 1: %i{resolveProblems inputOne}"
+    let inputTwo = read() |> parseTwo
+    printfn $"Part 2: %i{resolveProblems inputTwo}"
