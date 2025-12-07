@@ -1,4 +1,4 @@
-module AdventOfCode2025.Test.Day05Tests
+module Day05Tests
 
 open Xunit
 open AdventOfCode2025.Solutions.Day05
