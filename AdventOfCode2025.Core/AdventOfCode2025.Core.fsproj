@@ -9,6 +9,7 @@
         <Compile Include="FileHelpers.fs" />
         <Compile Include="XyPair.fs" />
         <Compile Include="Range.fs" />
+        <Compile Include="Xyz.fs" />
     </ItemGroup>
 
 </Project>
