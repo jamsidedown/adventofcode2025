@@ -21,3 +21,10 @@ type XyPair = { x: int64; y: int64 } with
         let dx = (a.x - b.x) |> Math.Abs
         let dy = (a.y - b.y) |> Math.Abs
         (dx + 1L) * (dy + 1L)
+
+    static member inside (cornerA: XyPair) (cornerB: XyPair) (point: XyPair): bool =
+        let left = min cornerA.x cornerB.x
+        let right = max cornerA.x cornerB.x
+        let top = min cornerA.y cornerB.y
+        let bottom = max cornerA.y cornerB.y
+        point.x > left && point.x < right && point.y > top && point.y < bottom

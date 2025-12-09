@@ -30,7 +30,42 @@ let partOne (coords: XyPair array): int64 =
     areas
     |> Seq.maxBy snd
     |> snd
+    
+let partTwo (coords: XyPair array): int64 =
+    // there are two odd coordinates at (94634, 50269) and (94634,48484) in my input
+    // I assume they're important
+    let high = { x = 94634; y = 50269 }
+    let low = { x = 94634; y = 48484 }
+    
+    let highCoords =
+        coords
+        |> Array.filter (fun xy -> xy.y >= high.y)
+        
+    let lowCoords =
+        coords
+        |> Array.filter (fun xy -> xy.y <= low.y)
+        
+    let maxHigh =
+        highCoords
+        |> Array.where (fun xy ->
+            highCoords
+            |> Array.where (XyPair.inside high xy)
+            |> Array.length = 0)
+        |> Array.map (XyPair.areaInclusive high)
+        |> Array.max
+        
+    let maxLow =
+        lowCoords
+        |> Array.where (fun xy ->
+            lowCoords
+            |> Array.where (XyPair.inside low xy)
+            |> Array.length = 0)
+        |> Array.map (XyPair.areaInclusive low)
+        |> Array.max
+        
+    max maxHigh maxLow
 
 let run () =
     let input = read() |> parse
     printfn $"Part 1: %i{partOne input}"
+    printfn $"Part 2: %i{partTwo input}"
