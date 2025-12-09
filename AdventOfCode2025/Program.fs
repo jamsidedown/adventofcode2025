@@ -7,6 +7,7 @@
     (6, AdventOfCode2025.Solutions.Day06.run)
     (7, AdventOfCode2025.Solutions.Day07.run)
     (8, AdventOfCode2025.Solutions.Day08.run)
+    (9, AdventOfCode2025.Solutions.Day09.run)
 ]
 
 [<EntryPoint>]
