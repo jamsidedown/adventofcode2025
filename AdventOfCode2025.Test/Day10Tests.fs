@@ -12,7 +12,11 @@ let exampleInput = [|
 [<Fact>]
 let ``Can parse the first example`` () =
     let parsed = parseLine exampleInput[0]
-    let expected = { indicatorLights = 6; buttons = [ 8; 10; 4; 12; 5; 3 ]; joltages = [ 3; 5; 4; 7 ] }
+    let expected = {
+        indicatorLights = [| 0; 1; 1; 0 |]
+        buttons = [ [| 0; 0; 0; 1 |]; [| 0; 1; 0; 1 |]; [| 0; 0; 1; 0 |]; [| 0; 0; 1; 1 |]; [| 1; 0; 1; 0 |]; [| 1; 1; 0; 0 |] ]
+        joltages = [| 3; 5; 4; 7 |]
+    }
     match parsed with
     | Some machine -> Assert.Equal(expected, machine)
     | None -> Assert.Fail()

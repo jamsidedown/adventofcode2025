@@ -7,10 +7,17 @@ open AdventOfCode2025.Core.FileHelpers
 open AdventOfCode2025.Core.List
 
 type Machine = {
-    indicatorLights: int
-    buttons: int list
-    joltages: int list
-}
+    indicatorLights: int array
+    buttons: int array list
+    joltages: int array
+} with
+    static member pressLights (buttons: int array) (lights: int array): int array =
+        Array.zip buttons lights
+        |> Array.map (fun (button, light) -> if button = 0 then light else light ^^^ 1)
+    
+    static member pressJoltages (buttons: int array) (joltages: int array): int array =
+        Array.zip buttons joltages
+        |> Array.map (fun (button, joltage) -> if button = 0 then joltage else joltage + 1)
 
 let machinePattern = Regex(@"^\[([.#]+)\] (.*) \{([\d,]+)\}$", RegexOptions.Compiled)
 
@@ -24,19 +31,21 @@ let rec parseInt (bits: int list): int =
     | head :: tail -> (1 <<< head) ^^^ (parseInt tail)
     | [] -> 0
     
-let parseIndicators (indicators: string): int =
-    List.ofSeq indicators
-    |> List.mapi (fun i c ->
-        if c = '#' then Some i else None)
-    |> List.choose id
-    |> parseInt
+let parseIndicators (indicators: string): int array =
+    Array.ofSeq indicators
+    |> Array.map (fun c -> if c = '#' then 1 else 0)
     
 let isNumeric (c: char): bool = c >= '0' && c <= '9'
 
 let asString (chars: char list): string =
     chars |> Array.ofList |> String
     
-let parseButtons (buttons: string): int list =
+let createArray (length: int) (switches: int Set): int array =
+    [| 0..(length - 1) |]
+    |> Array.map (fun i ->
+        if Set.contains i switches then 1 else 0)
+    
+let parseButtons (lightCount: int) (buttons: string): int array list =
     buttons.Split ' '
     |> List.ofArray
     |> List.map (fun group ->
@@ -44,26 +53,26 @@ let parseButtons (buttons: string): int list =
         |> Array.map List.ofSeq
         |> Array.map (List.filter isNumeric)
         |> Array.map asString
-        |> Array.map int
-        |> List.ofArray
-        |> parseInt)
+        |> Array.map int)
+    |> List.map Set.ofArray
+    |> List.map (createArray lightCount)
     
-let parseJoltages (joltages: string): int list =
+let parseJoltages (joltages: string): int array =
     joltages.Split ','
     |> Array.map List.ofSeq
     |> Array.map (List.filter isNumeric)
     |> Array.map asString
     |> Array.map int
-    |> List.ofArray
 
 let parseLine (line: string): Machine option =
     let matches = machinePattern.Match line
     let groups = matches.Groups |> List.ofSeq
     match groups with
     | _ :: indicators :: buttons :: joltages :: _ ->
+        let parsedIndicators = parseIndicators indicators.Value
         Some {
-            indicatorLights = parseIndicators indicators.Value
-            buttons = parseButtons buttons.Value
+            indicatorLights = parsedIndicators
+            buttons = parseButtons parsedIndicators.Length buttons.Value
             joltages = parseJoltages joltages.Value
         }
     | _ -> None
@@ -71,11 +80,11 @@ let parseLine (line: string): Machine option =
 let parse (lines: string list): Machine list =
     lines |> List.map parseLine |> List.choose id
 
-let optimiseMachine (machine: Machine): int list =
+let optimiseMachine (machine: Machine): int array list =
     let limit = List.length machine.buttons
     
-    let rec loop (iter: int): int * int list =
-        if (iter > limit) then (0, []) else
+    let rec loop (iter: int): (int array) * (int array list) =
+        if (iter > limit) then ([||], []) else
         
         let coms =
             machine.buttons
@@ -84,7 +93,7 @@ let optimiseMachine (machine: Machine): int list =
         let results =
             coms
             |> List.map (fun buttons ->
-                let lights = buttons |> List.reduce (^^^)
+                let lights = buttons |> List.reduce Machine.pressLights
                 (lights, buttons))
         
         let solutions =
