@@ -10,6 +10,7 @@
         <Compile Include="XyPair.fs" />
         <Compile Include="Range.fs" />
         <Compile Include="Xyz.fs" />
+        <Compile Include="List.fs" />
     </ItemGroup>
 
 </Project>
