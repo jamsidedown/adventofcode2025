@@ -22,4 +22,14 @@
       <ProjectReference Include="..\AdventOfCode2025.Core\AdventOfCode2025.Core.fsproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Z3" Version="4.15.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Microsoft.Z3">
+        <HintPath>..\packages\z3-4.15.4-arm64-osx-13.7.6\bin\Microsoft.Z3.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>

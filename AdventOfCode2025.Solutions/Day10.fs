@@ -5,6 +5,7 @@ open System.IO
 open System.Text.RegularExpressions
 open AdventOfCode2025.Core.FileHelpers
 open AdventOfCode2025.Core.List
+open Microsoft.Z3
 
 type Machine = {
     indicatorLights: int array
@@ -15,7 +16,7 @@ type Machine = {
         Array.zip buttons lights
         |> Array.map (fun (button, light) -> if button = 0 then light else light ^^^ 1)
     
-    static member pressJoltages (buttons: int array) (joltages: int array): int array =
+    static member pressJoltages (joltages: int array) (buttons: int array): int array =
         Array.zip buttons joltages
         |> Array.map (fun (button, joltage) -> if button = 0 then joltage else joltage + 1)
 
@@ -80,7 +81,7 @@ let parseLine (line: string): Machine option =
 let parse (lines: string list): Machine list =
     lines |> List.map parseLine |> List.choose id
 
-let optimiseMachine (machine: Machine): int array list =
+let optimiseLights (machine: Machine): int array list =
     let limit = List.length machine.buttons
     
     let rec loop (iter: int): (int array) * (int array list) =
@@ -110,10 +111,76 @@ let optimiseMachine (machine: Machine): int array list =
 
 let partOne (machines: Machine list): int =
     machines
-    |> List.map optimiseMachine
+    |> List.map optimiseLights
     |> List.map List.length
+    |> List.sum
+
+let optimiseJoltages (machine: Machine): int =
+    let context = new Context()
+    let optimiser = context.MkOptimize()
+    
+    let zero = context.MkInt(0)
+    
+    let variables =
+        machine.buttons
+        |> Array.ofList
+        |> Array.mapi (fun i _ -> context.MkIntConst($"x{i}"))
+        
+    for variable in variables do
+        optimiser.Add (context.MkGe (variable, zero))
+        
+    // adding upper bounds takes the execution time from ~600ms to ~2mins
+    // let upperBounds =
+    //     machine.buttons
+    //     |> Array.ofList
+    //     |> Array.map (fun buttons ->
+    //         Array.zip buttons machine.joltages
+    //         |> Array.filter (fun (b, _) -> b = 1)
+    //         |> Array.map snd
+    //         |> Array.min)
+    //
+    // for i in 0..(variables.Length - 1) do
+    //     let variable = variables[i]
+    //     let upperBound = context.MkInt(upperBounds[i])
+    //     optimiser.Add (context.MkLe (variable, upperBound))
+        
+    for j in 0..(machine.joltages.Length - 1) do
+        let joltage = context.MkInt(machine.joltages[j])
+        let buttonIndexes =
+            machine.buttons
+            |> Array.ofList
+            |> Array.mapi (fun i buttons -> (i, buttons))
+            |> Array.filter (fun (_, buttons) -> buttons[j] = 1)
+            |> Array.map fst
+        let joltageVariables =
+            buttonIndexes
+            |> Array.map (fun index -> variables[index] :> ArithExpr)
+
+        optimiser.Add (context.MkEq(context.MkAdd joltageVariables, joltage))
+        
+    let allVariables =
+        variables
+        |> Array.map (fun expr -> expr :> ArithExpr)
+        
+    optimiser.MkMinimize(context.MkAdd allVariables) |> ignore
+        
+    if optimiser.Check() = Status.SATISFIABLE then
+        let model = optimiser.Model
+        let presses =
+            model.Decls
+            |> Array.sortBy _.Name.ToString()
+            |> Array.map (fun decl ->
+                (model.ConstInterp decl).ToString() |> int)
+        Array.sum presses
+    else
+        0
+
+let partTwo (machines: Machine list): int =
+    machines
+    |> List.map optimiseJoltages
     |> List.sum
 
 let run () =
     let input = read() |> parse
     printfn $"Part 1: {partOne input}"
+    printfn $"Part 2: {partTwo input}"

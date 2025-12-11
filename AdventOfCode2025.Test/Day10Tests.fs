@@ -26,3 +26,9 @@ let ``Can solve part one`` () =
     let parsed = parse (List.ofArray exampleInput)
     let result = partOne parsed
     Assert.Equal(7, result)
+
+[<Fact>]
+let ``Can solve part two`` () =
+    let parsed = parse (List.ofArray exampleInput)
+    let result = partTwo parsed
+    Assert.Equal(33, result)
