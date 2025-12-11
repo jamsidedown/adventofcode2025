@@ -4,14 +4,42 @@ F# solutions for Advent of Code 2025 for as many days as I can manage
 
 ## Requirements
 
-```sh
-$ dotnet --version
-10.0.100
-```
+- [.NET 10.0 SDK](https://dotnet.microsoft.com/en-us/download)
+- [Microsoft.Z3 4.15.4](https://github.com/Z3Prover/z3/releases/tag/z3-4.15.4)
 
 ## Setup
 
 Input files should be put into `./input` and named `day01.txt`, `day02.txt`, ..., `day12.txt`
+
+Microsoft.Z3 needs to be installed in `./packages` for the solutions to Day 10 to work, this can be done on arm64 MacOS devices using the `fetch.sh` script in that directory.
+
+```sh
+$ cd packages
+
+$ ./fetch.sh
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:--  0:00:09 --:--:--     0
+100 45.5M  100 45.5M    0     0  4624k      0  0:00:10  0:00:10 --:--:-- 82.0M
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:--  0:00:05 --:--:--     0
+100 35.3M  100 35.3M    0     0  5526k      0  0:00:06  0:00:06 --:--:-- 5526k
+Archive:  z3-4.15.4-arm64-osx-13.7.6.zip
+  inflating: z3-4.15.4-arm64-osx-13.7.6/LICENSE.txt
+  inflating: z3-4.15.4-arm64-osx-13.7.6/bin/z3
+  inflating: z3-4.15.4-arm64-osx-13.7.6/bin/Microsoft.Z3.xml
+  inflating: z3-4.15.4-arm64-osx-13.7.6/bin/libz3java.dylib
+  inflating: z3-4.15.4-arm64-osx-13.7.6/bin/libz3.a
+  inflating: z3-4.15.4-arm64-osx-13.7.6/bin/com.microsoft.z3.jar
+  inflating: z3-4.15.4-arm64-osx-13.7.6/bin/Microsoft.Z3.deps.json
+  inflating: z3-4.15.4-arm64-osx-13.7.6/bin/Microsoft.Z3.dll
+  ...
+```
+
+For other platforms, download the appropriate `z3-4.15.4-<platform>-13.7.6.zip` from [here](https://github.com/Z3Prover/z3/releases/tag/z3-4.15.4) and change the `AdventOfCode2025.Solutions.fsproj` project file to point to the new z3 dll for your platform.
+
+At this time the `Microsoft.Z3` package on Nuget hasn't been updated for over 2 years, and doesn't support arm64.
 
 ## Testing and running
 
