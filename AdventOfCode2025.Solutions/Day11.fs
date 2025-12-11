@@ -39,7 +39,30 @@ let partOne (serverRack: Rack): int64 =
         result
     
     loop "you"
+    
+let partTwo (serverRack: Rack): int64 =
+    let cache = Dictionary<(string*bool*bool), int64>()
+    
+    let rec loop (dac: bool) (fft: bool) (current: string): int64 =
+        if current = "out" then
+            if dac && fft then 1 else 0
+        else
+        let key = (current, dac, fft)
+        if cache.ContainsKey key then cache[key] else
+        let result =
+            serverRack[current]
+            |> List.map (fun connection ->
+                match connection with
+                | "dac" -> loop true fft connection
+                | "fft" -> loop dac true connection
+                | _ -> loop dac fft connection)
+            |> List.sum
+        cache[key] <- result
+        result
+    
+    loop false false "svr"
 
 let run() =
     let input = read() |> parse
     printfn $"Part 1: %i{partOne input}"
+    printfn $"Part 2: %i{partTwo input}"
